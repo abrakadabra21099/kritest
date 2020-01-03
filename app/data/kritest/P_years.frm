@@ -1,0 +1,15 @@
+TYPE=VIEW
+query=select `kritest`.`T_years`.`title` AS `Y` from `kritest`.`T_years`
+md5=014be4f3484f8fbf1f7c29978c7954f3
+updatable=1
+algorithm=0
+definer_user=root
+definer_host=%
+suid=2
+with_check_option=0
+timestamp=2020-01-03 16:39:33
+create-version=1
+source=select `T_years`.`title` AS `Y` from `T_years`
+client_cs_name=utf8mb4
+connection_cl_name=utf8mb4_general_ci
+view_body_utf8=select `kritest`.`T_years`.`title` AS `Y` from `kritest`.`T_years`
