@@ -1,4 +1,4 @@
 #!/bin/bash
 ./backup.sh && ./down && \
 rm -rf data && mkdir data && \
-echo "Now you can push repo into github."
+echo "Now you can push repo into github!"
