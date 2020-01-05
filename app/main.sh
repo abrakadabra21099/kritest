@@ -81,10 +81,8 @@ IFS=$'\n'
 for I in $(cat "$tmp2"); do
   for R in $(cat "$tmp3"); do
     for Y in $(cat "$tmp4"); do
-#      echo "- $I - $R - $Y -"
       #5.1.1
-#      cat <<EOCALL | docker exec -i app_db_1 sh -c "$cmd" | tail -n+2 > "$tmp5"
-      cat <<EOCALL | docker exec -i app_db_1 sh -c "$cmd" > "$tmp5"
+      cat <<EOCALL | docker exec -i app_db_1 sh -c "$cmd" > "$tmp5" #2>/dev/null
         SET NAMES utf8 COLLATE utf8_unicode_ci;
         use kritest;
 
@@ -106,6 +104,10 @@ for I in $(cat "$tmp2"); do
           SELECT *
           FROM $O_values
           WHERE indicator = "$I" AND resource = "$R" AND year = "$Y";
+
+        #debug
+        SELECT 'debug: M_values:';
+        SELECT * FROM $M_values;
         #####
 
         # 5.1.1.2
@@ -122,6 +124,10 @@ for I in $(cat "$tmp2"); do
           FROM T_multiplication, $M_values
           WHERE base_unit =  unit
             AND calc_unit != unit;
+
+        #debug
+        SELECT 'debug: M_calculated:';
+        SELECT * FROM $M_calculated;
         #####
 
         # 5.1.1.3
@@ -138,6 +144,10 @@ for I in $(cat "$tmp2"); do
           FROM T_multiplication, $M_values
           WHERE base_unit != unit
             AND calc_unit =  unit;
+
+        #debug
+        SELECT 'debug: M_based:';
+        SELECT * FROM $M_based;
         #####
 
         # 5.1.1.4
@@ -154,9 +164,20 @@ for I in $(cat "$tmp2"); do
           FROM T_convertation, $M_values
           WHERE source_unit =  unit
             AND result_unit != unit;
+
+        #debug
+        SELECT 'debug: M_result:';
+        SELECT * FROM $M_result;
+        #####
+
+        # 5.1.1.5
+        SELECT COUNT($M_calculated.title) + COUNT($M_based.title) + COUNT($M_result.title) FROM $M_calculated, $M_based, $M_result;
+#$M_calculated, $M_based, $M_result;
+#        SELECT (COUNT($M_calculated.*) + COUNT($M_based.*) + COUNT($M_result.*))
+ #       FROM $M_calculated, $M_based, $M_result;
 EOCALL
+      echo "*** $Y ***"
       cat "$tmp5"
-      echo
     done
   done
 done
