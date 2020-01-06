@@ -1,14 +1,20 @@
 #!/bin/bash
 
 #Algo variables
-P_indicators='P_i'
-P_resources='P_r'
-P_years='P_y'
-M_values='M_v'
-O_values='O_v'
-M_calculated='M_c'
-M_based='M_b'
-M_result='M_r'
+T_convertation='T_convertation'
+T_indicators='T_indicators'
+T_multiplication='T_multiplication'
+T_resources='T_resources'
+T_values='T_values'
+T_years='T_years'
+P_indicators='P_indicators'
+P_resources='P_resources'
+P_years='P_years'
+M_values='M_values'
+O_values='O_values'
+M_calculated='M_calculated'
+M_based='M_based'
+M_result='M_result'
 
 #System variables
 db="app_db_1"
@@ -18,8 +24,7 @@ tmp3="/tmp/call03.ret"
 tmp4="/tmp/call01.ret"
 tmp5="/tmp/call04.ret"
 tmp6="/tmp/call05.ret"
-#tmp7="/tmp/call06.ret"
-#tmp8="/tmp/call07.ret"
+
 #Top Of Script.
 cat <<EOCALL | docker exec -i app_db_1 sh -c "$cmd" | tail -n+2 > "$tmp4"
   SET NAMES utf8 COLLATE utf8_unicode_ci;
@@ -42,7 +47,7 @@ cat <<EOCALL | docker exec -i app_db_1 sh -c "$cmd" | tail -n+2 > "$tmp4"
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
   INSERT INTO $P_indicators
-    SELECT * FROM T_indicators;
+    SELECT * FROM $T_indicators;
 
   # 3.
   DROP TABLE IF EXISTS $P_resources;
@@ -51,7 +56,7 @@ cat <<EOCALL | docker exec -i app_db_1 sh -c "$cmd" | tail -n+2 > "$tmp4"
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
   INSERT INTO $P_resources
-    SELECT * FROM T_resources;
+    SELECT * FROM $T_resources;
 
   # 4.
   DROP TABLE IF EXISTS $P_years;
@@ -60,7 +65,7 @@ cat <<EOCALL | docker exec -i app_db_1 sh -c "$cmd" | tail -n+2 > "$tmp4"
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
   INSERT INTO $P_years
-    SELECT * FROM T_years;
+    SELECT * FROM $T_years;
 
   SELECT * FROM $P_years;
 EOCALL
@@ -100,7 +105,7 @@ for I in $(cat "$tmp2"); do
 
           INSERT INTO $M_values
             SELECT *
-            FROM T_values
+            FROM $T_values
             WHERE indicator = "$I" AND resource = "$R" AND year = "$Y"
               UNION ALL
             SELECT *
@@ -122,8 +127,8 @@ for I in $(cat "$tmp2"); do
           ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
           INSERT INTO $M_calculated
-            SELECT T_multiplication.*
-            FROM T_multiplication, $M_values
+            SELECT $T_multiplication.*
+            FROM $T_multiplication, $M_values
             WHERE base_unit  = unit
               AND NOT calc_unit IN (SELECT unit FROM $M_values);
 
@@ -142,8 +147,8 @@ for I in $(cat "$tmp2"); do
           ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
           INSERT INTO $M_based
-            SELECT T_multiplication.*
-            FROM T_multiplication, $M_values
+            SELECT $T_multiplication.*
+            FROM $T_multiplication, $M_values
             WHERE calc_unit  = unit
               AND NOT base_unit IN (SELECT unit FROM $M_values);
 
@@ -162,8 +167,8 @@ for I in $(cat "$tmp2"); do
           ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
           INSERT INTO $M_result
-            SELECT T_convertation.*
-            FROM T_convertation, $M_values
+            SELECT $T_convertation.*
+            FROM $T_convertation, $M_values
             WHERE source_unit  = unit
               AND NOT result_unit IN (SELECT unit FROM $M_values);
 
@@ -188,9 +193,6 @@ for I in $(cat "$tmp2"); do
             SELECT COUNT(title) AS C FROM $M_result
           ) AS Ms;
 
-#$M_calculated, $M_based, $M_result;
-#        SELECT (COUNT($M_calculated.*) + COUNT($M_based.*) + COUNT($M_result.*))
- #       FROM $M_calculated, $M_based, $M_result;
 EOCALL
         echo "*** $Y ***"
         cat "$tmp5"
@@ -244,13 +246,4 @@ EOCALL
     done
   done
 done
-#indicator AS I, resource AS R, year AS Y, unit, value
-
-#echo '---'
-#cat "$tmp2"
-#echo '---'
-#cat "$tmp3"
-#echo '---'
-#cat "$tmp4"
-
 rm "$tmp6" "$tmp5" "$tmp4" "$tmp3" "$tmp2"

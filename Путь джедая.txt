@@ -1,30 +1,30 @@
 Mtoe
 -
- toe
-  Gtoe
-   Gtce
-    tce
-     Mtce
-      Mm3ng
-       m3ng
-        Gm3ng
-         Gft3ng
-          ft3ng
-           Mft3ng
-          _Twh_
-           wh
-            _Gwh_
-  Ktoe
-   Kboe
-    boe
-     Mboe
-     Bboe
-      Qbtu
-       btu (-15)
-        MMbtu (-6)
-         Mj (1055,060005)
-          j (-6)
-           Gj (-9)
+ toe (6)
+  Gtoe (-9)
+   Gtce (1,4285714)
+    tce (9)
+     Mtce (-6)
+      Mm3ng (751,4768963)
+       m3ng (6)
+        Gm3ng (-9)
+         Gft3ng (35,958043)
+          ft3ng (9)
+           Mft3ng ()
+          _Twh_ (0,301277062)
+           wh (12)
+            _Gwh_ (-9)
+  Ktoe (-3)
+   Kboe (6,8419054)         + 7.1428571428571
+    boe (3)                 +
+     Mboe ()
+     Bboe (-9)
+      Qbtu (0,58000001)     ? 5,8000001
+       btu (15)             ? 16
+        MMbtu (-6)          +
+         Mj (1055,060005)   +
+          j (6)             +
+           Gj (-9)          +
             _Gwh_ (0,000277778)
              wh
               _Twh_
